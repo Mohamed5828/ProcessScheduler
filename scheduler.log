@@ -1,0 +1,16 @@
+#At time x process y state arr w total z remain y wait k
+At time 1 process 1 Startedarr 1 total 26 remain 26 wait 1 
+At time 3 process 1 Stoppedarr 1 total 26 remain 24 wait 0 
+At time 3 process 2 Startedarr 1 total 14 remain 14 wait 3 
+At time 5 process 2 Stoppedarr 1 total 14 remain 12 wait 2 
+At time 5 process 1 Resumedarr 1 total 26 remain 24 wait 2 
+At time 5 process 1 Startedarr 1 total 26 remain 24 wait 4 
+At time 7 process 1 Stoppedarr 1 total 26 remain 22 wait 4 
+At time 7 process 2 Resumedarr 1 total 14 remain 12 wait 4 
+At time 7 process 2 Startedarr 1 total 14 remain 12 wait 6 
+At time 9 process 2 Stoppedarr 1 total 14 remain 10 wait 6 
+At time 9 process 1 Resumedarr 1 total 26 remain 22 wait 6 
+At time 9 process 1 Startedarr 1 total 26 remain 22 wait 8 
+At time 11 process 1 Stoppedarr 1 total 26 remain 20 wait 8 
+At time 11 process 2 Resumedarr 1 total 14 remain 10 wait 8 
+At time 11 process 2 Startedarr 1 total 14 remain 10 wait 10 
