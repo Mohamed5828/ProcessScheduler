@@ -9,18 +9,26 @@ void SRTN(PQueue *priorityQueue){
         }
         Process *readyProcess = p_queue_peek(priorityQueue);
         if(currentlyRunningProcess == NULL){
-            pop_p_queue(priorityQueue);
-            process_exit_queue(readyProcess);
-            process_run(readyProcess);
-        }else if(readyProcess ->id != lastPid &&            compare_remaining_time( readyProcess , currentlyRunningProcess)){
-            lastPid = readyProcess->id;
-            process_enter_queue(currentlyRunningProcess);
-            print_current_state(currentlyRunningProcess , 1);
-            insert_time_order(priorityQueue , currentlyRunningProcess);
-            process_end(currentlyRunningProcess);
-            pop_p_queue(priorityQueue);
-            process_exit_queue(readyProcess);
-            process_run(readyProcess);
+            if(readyProcess->memoryPTR == NULL){
+            // insert_time_order(priorityQueue ,   currentlyRunningProcess);
+            }else{
+                pop_p_queue(priorityQueue);
+                process_exit_queue(readyProcess);
+                process_run(readyProcess);
+            }
+        }else if(readyProcess ->id != lastPid && compare_remaining_time( readyProcess , currentlyRunningProcess)){
+            if(readyProcess->memoryPTR == NULL){
+                // insert_time_order(priorityQueue , currentlyRunningProcess);
+            }else{
+                lastPid = readyProcess->id;
+                process_enter_queue(currentlyRunningProcess);
+                print_current_state(currentlyRunningProcess , 1);
+                insert_time_order(priorityQueue , currentlyRunningProcess);
+                process_end(currentlyRunningProcess);
+                pop_p_queue(priorityQueue);
+                process_exit_queue(readyProcess);
+                process_run(readyProcess);
+            }
         }
     }
     // while (!queue_isEmpty(mainQueue))

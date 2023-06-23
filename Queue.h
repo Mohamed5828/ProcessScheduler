@@ -17,6 +17,9 @@ typedef struct Process{
     int executionTime;
     int remainingTime;
 
+    int memeorySize;
+    void* memoryPTR;
+
 } Process;
 
 // Definition of PQueue-node
@@ -30,6 +33,7 @@ typedef struct PQueue {
     PQueueNode* head;
 } PQueue;
 
+// PQueueNode *head;
 //definition of Queue-node
 typedef struct QueueNode {
     Process *data;
@@ -40,6 +44,15 @@ typedef struct Queue {
     QueueNode *front;
     QueueNode *rear;
 } Queue;
+
+void printQueue(Queue *queue) {
+    QueueNode *current = queue->front;
+    while (current != NULL) {
+        printf("QUEUEUEEEUEUEUEUEUEUEUE\n\n%d ", current->data->id);
+        current = current->next;
+    }
+    printf("\n");
+}
 
 // Function to create a new priority queue
 PQueue* create_priority_queue() {
@@ -176,3 +189,29 @@ bool p_queue_isEmpty(struct PQueue* q)
 {
     return q->head == NULL;
 }
+
+// //delete the node by the key
+// void* deleteByKey(PQueue q,int key){
+//     PQueueNode *current = q->head ;
+//     PQueueNode *prev = NULL ;
+//     if(head == NULL) 
+//         return NULL;
+//     while (current->data->memoryPTR != key){
+//         if(current->next == NULL){
+//             return NULL;
+//         }else{
+//             prev = current;
+//             current = current ->next;
+//         }
+//     }
+//     //when the keys matches then 
+
+//     //if the key is the first --> drop the first node
+//     if(current == head){
+//         head = head->next;
+//     }else{
+//     //the key is anywhere else we drop it and connect the prev to the next
+//     prev->next = current ->next;
+//     }
+//     return current;
+// }

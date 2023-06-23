@@ -13,24 +13,40 @@ void HPF_finished(int signum){
     // process_run(current_process);
     currentlyRunningProcess ->executionTime = currentlyRunningProcess ->runningTime;
     print_current_state(currentlyRunningProcess , 3);
+    buddy_free(currentlyRunningProcess->memoryPTR);
     free(currentlyRunningProcess);
     signal(SIGUSR2 , HPF_finished);
 }
 
 void HPF(PQueue *pq){
     PQueue *processQueue;
+    Process *onTopProcess;
     Process *readyProcess;
     signal(SIGUSR2 , HPF_finished);
     processRunningFlag = false;
     printf("HPF Starting \n");
     processQueue = pq;
 while (flag || !p_queue_isEmpty(processQueue) || processRunningFlag){
+    
+    //this following three line is to always at the start peek and pop the preQueue and if there still no memeory for the peeked process it will be added to preQueue again later
+  if(!p_queue_isEmpty(prePQueue)){
+        // printf("preQueue is not empty\n");
+        Process *processNeedMemory = p_queue_peek(prePQueue);
+        // printf("current process in preQueue have an id of: %d\n",processNeedMemory->id);
+
+        pop_p_queue(prePQueue);
+        insert_ordered(mainPiorityQueue ,processNeedMemory);
+    }
     if (p_queue_isEmpty(processQueue)){
         continue;
     }if(!processRunningFlag){
     readyProcess = p_queue_peek(processQueue);
-    pop_p_queue(processQueue);    
-    process_run(readyProcess);
+        process_run(readyProcess);
+    // if(readyProcess->memoryPTR == NULL){
+    //     insert_ordered(prePQueue , readyProcess);
+    // }else{
+        pop_p_queue(processQueue);    
+    // }
     }
     
 }

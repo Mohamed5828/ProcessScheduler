@@ -1,7 +1,7 @@
 #include "processesHelperFunctions.h"
 
-int totalPRunningTime = 0;
-int numberOfProcesses = 0;
+int totalPRunningTime;
+int numberOfProcesses;
 int msgQId;
 int pSchedGeneratorSem;
 int quantum = -1;
@@ -11,10 +11,12 @@ void clearResources(int);
 
 void read_file(Queue *processQueue){
     FILE *file = fopen("processes.txt" , "r");
-    int id, runningTime, arrivalTime, priority;
+    int id, runningTime, arrivalTime, priority, memorySize;
+    totalPRunningTime = 0;
+    numberOfProcesses = 0;
     char first_line [30];
     fgets(first_line , 30 ,file);
-    while(fscanf(file , "%d\t%d\t%d\t%d" , &id , &arrivalTime , &runningTime , &priority) != EOF){
+    while(fscanf(file , "%d\t%d\t%d\t%d\t%d" , &id , &arrivalTime , &runningTime , &priority ,&memorySize) != EOF){
         Process *process = (Process*) malloc(sizeof(Process));
         process->id = id;
         process->arrivalTime = arrivalTime;
@@ -26,6 +28,8 @@ void read_file(Queue *processQueue){
         process->pid = -1;
         process->executionTime = 0;
         process->waitingTime = 0;
+        process->memeorySize = memorySize;
+        process->memoryPTR = NULL;
 
         numberOfProcesses++;
         totalPRunningTime += runningTime ;
@@ -43,14 +47,14 @@ int schedulerAlgorithm(){
     printf("[3] Round Robin (RR)\n");
     printf("=======================================\n");
     scanf("%d", &algorithm);
-    while (algorithm > 3 || algorithm < 1) {
+    if (algorithm > 3 || algorithm < 1) {
         printf("Enter a number from 1 to 3\n");
         scanf("%d", &algorithm);
     }
     if(algorithm == 3 ){
-        printf("enter the Quantum -must be a whole number-");
+        printf("enter the Quantum -must be a whole number-\n");
         scanf("%d" , &quantum);
-        while (quantum < 0)
+        if (quantum < 0)
         {
             printf("Enter a number bigger than 0\n");
             scanf("%d", &quantum);
@@ -93,7 +97,7 @@ void send_process(Process *process){
 void stop_process(){
     Process *process = (Process*) malloc(sizeof(Process));
     process->id = -1;
-    printf("Sending process with id = -1\n");
+    // printf("Sending process with id = -1\n");
     send_process(process);
 }
 
@@ -188,5 +192,6 @@ void clearResources(int signum)
 
     msgctl((msgQId) , IPC_RMID , (struct msqid_ds *) 0);
     semctl(pSchedGeneratorSem , 0 ,IPC_RMID , (struct msqid_ds *) 0);
-    semctl(pSchedGeneratorSem , 0 , IPC_RMID , (union Semun) 0);
+    // semctl(pSchedGeneratorSem , 0 , IPC_RMID , (union Semun) 0);
+    printf("resource cleared");
 }

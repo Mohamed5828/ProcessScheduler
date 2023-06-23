@@ -12,7 +12,7 @@ int quantum = -1;
 msgbuff message;
 
 
-Process* create_process(int id, int arrivalTime, int runningTime, int priority, int enterTime, int quitTime, int executionTime, int waitingTime, boolean isRunning, boolean isCreated, int pid);
+Process* create_process(int id, int arrivalTime, int runningTime, int priority, int enterTime, int quitTime, int executionTime, int waitingTime, boolean isRunning, boolean isCreated, int pid ,int memorySize);
 
 void intialize_semaphore();
 
@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
     initClk();
     intialize_semaphore();
     intialize_messageQueue();
-
+    initialize_tree();
+    
     algroithm = atoi(argv[1]);
     numberOfProcesses = atoi(argv[2]);
     totalRunningTime = atoi(argv[3]);
@@ -80,7 +81,7 @@ void intialize_messageQueue(){
     }
 }
 
-Process* create_process(int id, int arrivalTime, int runningTime, int priority, int enterTime, int quitTime, int executionTime, int waitingTime, boolean isRunning, boolean isCreated, int pid){
+Process* create_process(int id, int arrivalTime, int runningTime, int priority, int enterTime, int quitTime, int executionTime, int waitingTime, boolean isRunning, boolean isCreated, int pid , int memorySize){
     Process *process = (Process*) malloc(sizeof(Process));
     process->arrivalTime = arrivalTime;
     process->id = id;
@@ -94,14 +95,15 @@ Process* create_process(int id, int arrivalTime, int runningTime, int priority, 
     process->isRunning = isRunning;
     process->remainingTime = process_remaining_time(process);
     process->pid = pid;
-
-    return process;
+    process->memeorySize = memorySize;
+    process->memoryPTR = NULL;
+        return process;
 }
 
 void add_HPF_queue(Process process){
     if (process.id != -1){
         Process *newProcess = create_process(
-             process.id, process.arrivalTime, process.runningTime, process.priority, process.enterTime,  process.quitTime, process.executionTime, process.waitingTime,process.isRunning ,process.isCreated, process.pid
+             process.id, process.arrivalTime, process.runningTime, process.priority, process.enterTime,  process.quitTime, process.executionTime, process.waitingTime,process.isRunning ,process.isCreated, process.pid,process.memeorySize
         );
         insert_ordered(mainPiorityQueue , newProcess);
     }
@@ -110,7 +112,7 @@ void add_HPF_queue(Process process){
 void add_RR_queue(Process process){
     if (process.id != -1){
         Process *newProcess = create_process(
-             process.id, process.arrivalTime, process.runningTime, process.priority, process.enterTime,  process.quitTime, process.executionTime, process.waitingTime,process.isRunning ,process.isCreated, process.pid
+             process.id, process.arrivalTime, process.runningTime, process.priority, process.enterTime,  process.quitTime, process.executionTime, process.waitingTime,process.isRunning ,process.isCreated, process.pid,process.memeorySize
         );
         enQueue(mainQueue , newProcess);
     }
@@ -119,7 +121,7 @@ void add_RR_queue(Process process){
 void add_SRTN_queue(Process process){
     if (process.id != -1){
         Process *newProcess = create_process(
-             process.id, process.arrivalTime, process.runningTime, process.priority, process.enterTime,  process.quitTime, process.executionTime, process.waitingTime,process.isRunning ,process.isCreated, process.pid
+             process.id, process.arrivalTime, process.runningTime, process.priority, process.enterTime,  process.quitTime, process.executionTime, process.waitingTime,process.isRunning ,process.isCreated, process.pid,process.memeorySize
         );
         insert_time_order(mainPiorityQueue , newProcess);
     }
@@ -149,6 +151,7 @@ void get_process(int signum){
     if(message.process.id == -1){
         flag = 0;
     }
+    printf("getProcess terminated");
 }
 
 void print_queue(int signum){

@@ -13,6 +13,7 @@ int totalWaitingTime = 0;
 bool processRunningFlag;
 PQueue *mainPiorityQueue;
 Queue *mainQueue;
+PQueue *prePQueue;
 Process *currentlyRunningProcess;
 int flag = 1;
 
@@ -76,6 +77,8 @@ if (process == NULL){
     printf("waitingTime       : %d\n", process->waitingTime);
     printf("running           : %d\n", process->isRunning);
     printf("startedBefore     : %d\n", process->isCreated);
+    printf("Memory            : %d\n", process->memeorySize);
+    printf("Memory Address    : %p\n", process->memoryPTR);
     printf("\n*********************************************\n");
     fflush(stdout);
 }
@@ -136,7 +139,7 @@ fprintf(outputFile, "%s", "arr ");
         fprintf(outputFile, "%s", "TA ");
         fprintf(outputFile, "%d ", TA);
         fprintf(outputFile, "%s", "WTA ");
-        fprintf(outputFile, "%.2f ", WTA);
+        fprintf(outputFile, "%.2f", WTA);
     }
 
 
@@ -145,9 +148,10 @@ fprintf(outputFile, "%s", "arr ");
 }
 
 void process_run(Process* process){
-    processRunningFlag = true;
-    currentlyRunningProcess = process;
+    //buddy_malloc in process run 
+
     process_error_null(process);
+    currentlyRunningProcess = process;
     if(process->isCreated == 1){
         print_current_state(process , 2);
     }else{
@@ -162,18 +166,15 @@ void process_run(Process* process){
         exit(-1);
     }
     if(pid == 0){
-        int lengthOfRemainingTime = snprintf(NULL, 0, "%d", process->runningTime) + 1;
-        char remaining_time_string[lengthOfRemainingTime]; 
-        snprintf(remaining_time_string ,lengthOfRemainingTime,"%d", process_remaining_time(process) );
+
+       char remaining_time_str[20];
+        sprintf(remaining_time_str, "%d", process_remaining_time(process));
         if (process->pid != -1){
             printf("a process with id = %d is created with pid = %d current time %d\n" ,process ->id , getpid() , getClk());
             // Without the call to fflush(stdout), there is a possibility that some of the output from the first process may not be visible to the user before the new process starts
             fflush(stdout);
-            print_current_state(process , 0);
         }
-            //log pid here 
-        process->pid = getpid();
-        char *args[] = {"./process.out" , remaining_time_string , NULL};
+        char *args[] = {"./process.out" , remaining_time_str, NULL};
         int execResult = execvp(args[0] , args);
              if (execResult == -1) {
             perror("Error in execl");
@@ -182,10 +183,11 @@ void process_run(Process* process){
     }
     //log pid here 
     process->pid = pid;
+    print_current_state(process , 0);
     printf("\n=Running:");
     printf("\n Current time = %d", getClk());
     print_full_info(process);
-    
+       
 }
 
 void process_end(const Process* const process){
@@ -218,9 +220,9 @@ void process_enter_queue( Process* const process){
     process->enterTime = current_time;
     process->executionTime += current_time - process->quitTime;
     assert(process->executionTime >= 0);
-    printf("\n=Entered Queue:");
-    printf("\n Current time = %d", current_time);
-    print_full_info(process);
+    // printf("\n=Entered Queue:");
+    // printf("\n Current time = %d", current_time);
+    // print_full_info(process);
 }
 
 void process_exit_queue( Process* const process){
@@ -244,6 +246,8 @@ void finish_handler(int signum){
     process_enter_queue(currentlyRunningProcess);
     print_current_state(currentlyRunningProcess , 3);
     // enQueue(mainQueue , currentlyRunningProcess);
+    buddy_free(currentlyRunningProcess->memoryPTR);
+    currentlyRunningProcess = NULL;
     signal(SIGUSR2 , finish_handler);
 }
 
@@ -251,18 +255,10 @@ int compare_remaining_time(const Process* const onTop , const Process* const run
     process_error_null(runningProcess);
     process_error_null(onTop);
     int runningExecution = getClk() - runningProcess->quitTime;
-
     int topReminder = onTop->runningTime - onTop->executionTime;
     int currentReminder = runningProcess->runningTime - runningProcess->executionTime - runningExecution;
 
-    if (currentReminder < 0){
-        return 0;
-    }
-    if (topReminder < 0 || currentReminder < 0){
-        printf("Quit queue = %d , current clk = %d\n", runningProcess->quitTime, getClk());
-    }
-    assert(topReminder >= 0 && currentReminder >= 0);
-    return(topReminder < currentReminder);
+    return (currentReminder < 0) ? 0 : (topReminder < currentReminder);
 }
 
 
