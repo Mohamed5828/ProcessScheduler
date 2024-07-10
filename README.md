@@ -21,6 +21,8 @@ An Operating systems scheduler
 
 ## Description
 
+-The project is done on two phases
+
 ### Phase 1
 
 - A CPU scheduler determines an order for the execution of its scheduled processes.
@@ -156,18 +158,6 @@ make run
   3 for Round Robin (RR).
 
 - In case of round robin enter the quantum
-
-## Contributors
-
-<table>
-  <tr>
-
-<td align="center">
-<a href="https://github.com/Mohamed5828" target="_black">
-<img src="https://avatars.githubusercontent.com/u/12345678?v=4" width="150px;" alt="Mohamed Ahmed"/><br /><sub><b>Mohamed Ahmed</b></sub></a><br />
-</td>
-</tr>
- </table>
 
 ## License
 
