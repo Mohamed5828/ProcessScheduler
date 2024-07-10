@@ -2,15 +2,6 @@
 
 # OScheduler
 
-<div align="center">
-
-[![contributors](https://img.shields.io/github/contributors/Mohamed5828/processScheduler)](https://github.com/Mohamed5828/processScheduler/contributors)
-[![license](https://img.shields.io/pypi/l/ansicolortags.svg)](LICENSE)
-[![forks](https://img.shields.io/github/forks/Mohamed5828/processScheduler)](https://github.com/Mohamed5828/processScheduler/network)
-[![stars](https://img.shields.io/github/stars/Mohamed5828/processScheduler)](https://github.com/Mohamed5828/processScheduler/stargazers)
-[![issues](https://img.shields.io/github/issues/Mohamed5828/processScheduler)](https://github.com/Mohamed5828/processScheduler/issues)
-
-</div>
 </div>
 
 <div align="center">
